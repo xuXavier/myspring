@@ -9,6 +9,9 @@ import java.util.Map;
     BeanFactory应该是一个接口，由它提供getBean的抽象方法
  */
 public interface BeanFactory {
-    public Object getBean(String beanName) throws InstantiationException, IllegalAccessException;
+    public Object getBean(String beanName) ;
+
+    public Object getBean(String beanName,Object... args);
+
    // public void registerBeanDefinition(String beanName,BeanDefinition beanDefinition);
 }

@@ -9,7 +9,7 @@ import java.util.Map;
 public class BeanDefinition {
     private Class beanClass;
 
-    public Class getBean() {
+    public Class getBeanClass() {
         return beanClass;
     }
 
