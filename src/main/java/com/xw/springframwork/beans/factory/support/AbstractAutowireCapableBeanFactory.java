@@ -1,8 +1,12 @@
 package com.xw.springframwork.beans.factory.support;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.xw.springframwork.beans.factory.BeanFactory;
 import com.xw.springframwork.beans.factory.BeansException;
+import com.xw.springframwork.beans.factory.PropertyValue;
+import com.xw.springframwork.beans.factory.PropertyValues;
 import com.xw.springframwork.beans.factory.config.BeanDefinition;
+import com.xw.springframwork.beans.factory.config.BeanReference;
 
 import java.lang.reflect.Constructor;
 
@@ -40,9 +44,38 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 break;
             }
         }
-        Object beanObject = instantiationStrategy.instante(beanDefinition, beanName, curConstructor, args);
+        Object beanObject=null;
+        try {
+            beanObject  = instantiationStrategy.instante(beanDefinition, beanName, curConstructor, args);
+            applyPropertyValues(beanName, beanObject, beanDefinition);
+        }catch (Exception e){
+            throw new BeansException("Instante of bean fail",e);
+        }
         return beanObject;
     }
 
-    public abstract void registyBeanDefinition(String beanName, BeanDefinition beanDefinition);
+
+    //往bean里注入属性
+    protected void applyPropertyValues(String beanName,Object bean,BeanDefinition beanDefinition) {
+        try {
+            //暂时只能从beanDefintion中获取属性和值，所以要在bean对象中直接赋值
+            PropertyValues propertyValues = beanDefinition.getPropertyValues();
+            //遍历所有的属性和值
+            for (PropertyValue propertyValue : propertyValues.getPropertyValues()) {
+                String name = propertyValue.getName();
+                Object value = propertyValue.getValue();
+                //只要值是引用类型，就可以
+                if (value instanceof BeanReference) {
+                    //获取所有的依赖对象
+                    BeanReference beanReference = (BeanReference) value;
+                    value = getBean(beanReference.getBeanName());
+                }
+                //通过hutool的工具包BeanUtil来给bean设置属性值
+                BeanUtil.setProperty(bean, name, value);
+            }
+
+        }catch (Exception e){
+            throw new BeansException("Fail to set property"+e);
+        }
+    }
 }

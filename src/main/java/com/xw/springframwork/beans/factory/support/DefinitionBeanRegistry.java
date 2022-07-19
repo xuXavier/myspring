@@ -8,4 +8,6 @@ import com.xw.springframwork.beans.factory.config.BeanDefinition;
  */
 public interface DefinitionBeanRegistry {
     void registyBeanDefinition(String beanName, BeanDefinition beanDefinition);
+
+    boolean containsBeanDefinition(String beanName);
 }

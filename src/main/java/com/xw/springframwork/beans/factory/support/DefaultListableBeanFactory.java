@@ -6,7 +6,7 @@ import com.xw.springframwork.beans.factory.config.BeanDefinition;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory {
+public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements DefinitionBeanRegistry {
     private Map<String, BeanDefinition> beanDefinitionMap=new HashMap<>();
     @Override
     BeanDefinition getBeanDefition(String beanName) {
@@ -21,6 +21,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         }catch (Exception e){
             throw new BeansException("beanDefintion注册失败");
         }
+    }
+
+    @Override
+    public boolean containsBeanDefinition(String beanName) {
+        return beanDefinitionMap.containsKey(beanName);
     }
 
 }

@@ -19,7 +19,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     }
 
     @Override
-    public Object getBean(String beanName, Object[] args) {
+    public Object getBean(String beanName, Object... args) {
         //创建bean时先判断是不是单例bean
         Object singletonBean=getSingletonBean(beanName);
         if(null!=singletonBean){
